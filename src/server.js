@@ -21,14 +21,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 //routes
-app.use('/11oils', categoryRoutes);
-app.use('/11oils', userRoutes );
-app.use('/11oils', adminRoutes );
-app.use('/11oils', couponRoutes );
-app.use('/11oils', productRoutes );
-app.use('/11oils', orderRoutes );
-app.use('/11oils', blogRoutes );
-app.use('/11oils', reviewRoutes );
+app.use('/10oils', categoryRoutes);
+app.use('/10oils', userRoutes);
+app.use('/10oils', adminRoutes);
+app.use('/10oils', couponRoutes);
+app.use('/10oils', productRoutes);
+app.use('/10oils', orderRoutes);
+app.use('/10oils', blogRoutes);
+app.use('/10oils', reviewRoutes);
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log('MongoDB connected');

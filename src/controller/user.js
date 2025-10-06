@@ -8,7 +8,7 @@ const uploadImages = require('../utils/uploadImages')
 
 const CreateUser = async (req, res) => {
     try {
-        const { email, username, password } = req.body;
+        const { email, phone, username, password } = req.body;
 
         const userExist = await User.findOne({ email: email });
 
@@ -23,6 +23,7 @@ const CreateUser = async (req, res) => {
 
         const newUser = await User.create({
             email: email,
+            phone: phone,
             username: username,
             password: hashedPassword
         })
@@ -86,9 +87,9 @@ const getUser = async (req, res) => {
     try {
         const userId = req.user.id; //from tokenAuth
         const user = await User.findById(userId);
-        
 
-           if (!user) {
+
+        if (!user) {
             return res.json({
                 status: 400,
                 message: "User not found"
@@ -110,25 +111,25 @@ const getUser = async (req, res) => {
 }
 
 const uploadUserImage = async (req, res) => {
-   try {
+    try {
 
-      const imageUrl = await uploadImages(req.file);
+        const imageUrl = await uploadImages(req.file);
 
 
-    res.status(200).json({
-      message: 'Image uploaded',
-      imageUrl: imageUrl
-    });
-  } catch (error) {
-    console.error('S3 upload error:', error);
-    res.status(500).json({ message: 'Failed to upload image', error: error.message });
-  }
+        res.status(200).json({
+            message: 'Image uploaded',
+            imageUrl: imageUrl
+        });
+    } catch (error) {
+        console.error('S3 upload error:', error);
+        res.status(500).json({ message: 'Failed to upload image', error: error.message });
+    }
 };
 
 const updateUser = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { email, username, phone, address, userImage} = req.body;
+        const { email, username, phone, address, userImage } = req.body;
         const updatedUser = await User.findByIdAndUpdate(userId, { email, username, phone, address, userImage }, { new: true });
         res.json({
             status: 200,
@@ -142,7 +143,7 @@ const updateUser = async (req, res) => {
             message: "Internal server error"
         });
     }
-}   
+}
 
 
 module.exports = {
