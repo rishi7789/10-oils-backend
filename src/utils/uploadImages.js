@@ -55,7 +55,7 @@ const uploadImages = async (file) => {
     Key: uniqueFileName,
     Body: file.buffer,
     ContentType: file.mimetype,
-    // ACL: 'public-read', // if you want public access
+    ACL: 'public-read', // if you want public access
   };
 
   try {
@@ -65,7 +65,7 @@ const uploadImages = async (file) => {
     throw new Error('Image upload failed');
   }
 
-} 
+}
 
 
 module.exports = { uploadImages };

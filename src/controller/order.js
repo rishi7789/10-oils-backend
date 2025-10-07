@@ -15,48 +15,58 @@ const createOrder = async (req, res) => {
             orderItems,
             totalAmount,
             shippingAddress,
-            orderNotes,
+            // orderNotes,
             paymentMethod,
             paymentStatus,
-            deliveryStatus,
-            isPaid,
-            couponId
+            // deliveryStatus,
+            // isPaid,
+            // couponId
         } = req.body;
 
         if (!orderItems || orderItems.length === 0) {
             return res.json({ status: 400, message: 'Order items cannot be empty' });
         }
 
-    
-                for (const item of orderItems) {
+
+        for (const item of orderItems) {
             const product = await Product.findById(item.productId);
             if (!product) {
                 return res.json({ status: 400, message: 'Product not found' });
             }
 
-            // Find matching variant by SKU
-            const variant = product.productVariants.find(v => v.sku === item.sku);
-            if (!variant) {
-                return res.json({ status: 400, message: `Variant with SKU ${item.sku} not found` });
-            }
-
-            // Check if stock is sufficient
-            if (variant.stock < item.quantity) {
+            if (product.stock < item.quantity) {
                 return res.json({ status: 400, message: 'Insufficient stock for this product variant' });
             }
 
-            // Deduct stock
-            variant.stock -= item.quantity;
+            // Update product
+            product.stock -= item.quantity;
 
             await product.save();
+
+            // Find matching variant by SKU
+            // const variant = product.productVariants.find(v => v.sku === item.sku);
+            // if (!variant) {
+            //     return res.json({ status: 400, message: `Variant with SKU ${item.sku} not found` });
+            // }
+
+            // // Check if stock is sufficient
+            // if (variant.stock < item.quantity) {
+            //     return res.json({ status: 400, message: 'Insufficient stock for this product variant' });
+            // }
+
+            // Deduct stock
+            // variant.stock -= item.quantity;
+
+
+            // await product.save();
         }
 
-        if(couponId){
-             await Coupon.findByIdAndUpdate(couponId,
-                  { $inc: { usabilityLimit: -1 } },
-                  { new: true }
-                );
-        }
+        // if (couponId) {
+        //     await Coupon.findByIdAndUpdate(couponId,
+        //         { $inc: { usabilityLimit: -1 } },
+        //         { new: true }
+        //     );
+        // }
 
         const newOrder = await Order.create({
             userId,
@@ -67,12 +77,12 @@ const createOrder = async (req, res) => {
             orderItems,
             totalAmount,
             shippingAddress,
-            orderNotes,
+            // orderNotes,
             paymentMethod,
             paymentStatus,
-            deliveryStatus,
-            isPaid,
-            couponId
+            // deliveryStatus,
+            // isPaid,
+            // couponId
         });
 
         res.json({

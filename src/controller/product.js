@@ -27,21 +27,22 @@ const uploadProductImages = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    const { name, categoryId, productVariants } = req.body;
-
-    if (!name || !categoryId || !Array.isArray(productVariants)) {
-      return res.status(400).json({ message: 'Invalid input' });
-    }
+    const { name, categoryId, sku, images, stock, regularPrice, salePrice, description } = req.body;
 
     const product = new Product({
       name,
       categoryId,
-      productVariants
+      sku,
+      images,
+      stock,
+      regularPrice,
+      salePrice,
+      description
     });
 
     await product.save();
 
-     await Category.findByIdAndUpdate(categoryId,
+    await Category.findByIdAndUpdate(categoryId,
       { $inc: { totalProducts: 1 } },
       { new: true }
     );
@@ -100,12 +101,12 @@ const updateProductById = async (req, res) => {
     const { productId } = req.params;
 
     if (!productId) {
-      return res.json({status: 400, message: 'Product ID is required' });
+      return res.json({ status: 400, message: 'Product ID is required' });
     }
 
-    const { name, categoryId, productVariants, isActive} = req.body;
+    const { name, categoryId, productVariants, isActive } = req.body;
 
-    const updateData= {};
+    const updateData = {};
     if (name) updateData.name = name;
     if (categoryId) updateData.categoryId = categoryId;
     if (productVariants) updateData.productVariants = productVariants;
@@ -137,7 +138,7 @@ const deleteProductById = async (req, res) => {
 
     const deletedProduct = await Product.findByIdAndDelete(productId);
 
-       if (deletedProduct.categoryId) {
+    if (deletedProduct.categoryId) {
       await Category.findByIdAndUpdate(
         deletedProduct.categoryId,
         { $inc: { totalProducts: -1 } }
@@ -163,6 +164,7 @@ module.exports = {
   uploadProductImages,
   addProduct,
   getProducts,
+  getProductById,
   updateProductById,
   deleteProductById
 };

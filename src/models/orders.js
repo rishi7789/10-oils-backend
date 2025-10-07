@@ -10,20 +10,14 @@ const orderSchema = new mongoose.Schema({
         {
             productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
             productName: { type: String },
-            sku : { type: String },
+            sku: { type: String },
             quantity: { type: Number, default: 0 },
             price: { type: Number }
         }
     ],
     totalAmount: { type: Number },
-    shippingAddress: {
-        street: { type: String },
-        city: { type: String },
-        state: { type: String },
-        zip: { type: String },
-        country: { type: String },
-    },
-     orderNotes: { type: String },
+    shippingAddress: { type: String },
+    orderNotes: { type: String },
     paymentMethod: { type: String, enum: ['cod', 'online'], default: 'cod' },
     paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },
     deliveryStatus: { type: String, enum: ['pending', 'shipped', 'delivered', 'returned'], default: 'pending' },
