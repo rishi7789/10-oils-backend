@@ -27,6 +27,8 @@ const createOrder = async (req, res) => {
             return res.json({ status: 400, message: 'Order items cannot be empty' });
         }
 
+        const totalItems = orderItems.length;
+
 
         for (const item of orderItems) {
             const product = await Product.findById(item.productId);
@@ -80,6 +82,7 @@ const createOrder = async (req, res) => {
             // orderNotes,
             paymentMethod,
             paymentStatus,
+            totalItems
             // deliveryStatus,
             // isPaid,
             // couponId
